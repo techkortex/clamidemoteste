@@ -54,13 +54,23 @@ document.querySelector('#rotate-left').addEventListener('click',()=>{table.rotat
 window.addEventListener('bansang-feature',async event=>{if(loading)return;if(!ready||!active)await open3D();if(!ready||!active)return;cancelAnimationFrame(animation);const type=event.detail;let target=type==='base'?[2.7,.9,3.6]:type==='materiais'?[1.8,3.4,2.9]:type==='formatos'?[.7,4.3,1.1]:defaultPosition;const start=camera.position.clone(),end=new THREE.Vector3(...target),plateStart=platter.position.x,plateEnd=type==='prato'?.38:-.42;let startTime=performance.now();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;function frame(now){const t=reduced?1:Math.min(1,(now-startTime)/850),ease=1-Math.pow(1-t,3);camera.position.lerpVectors(start,end,ease);platter.position.x=plateStart+(plateEnd-plateStart)*ease;controls.update();render();if(t<1)animation=requestAnimationFrame(frame);}animation=requestAnimationFrame(frame);});
 
 const arButton=document.querySelector('#view-ar');
-let xrSupported=false;
-if(navigator.xr&&isSecureContext) navigator.xr.isSessionSupported('immersive-ar').then(value=>xrSupported=value).catch(()=>{});
+const quickLook=document.querySelector('#view-ar-apple');
+const supportsQuickLook=!!quickLook.relList?.supports?.('ar');
+if(supportsQuickLook){arButton.hidden=true;quickLook.hidden=false;}
+let arStarting=false;
+const arStatus=document.querySelector('#ar-status');
+function arMessage(message){arStatus.textContent=message;arStatus.setAttribute('tabindex','-1');arStatus.focus({preventScroll:true});}
+
 arButton.addEventListener('click',async()=>{
- if(!xrSupported){document.querySelector('#ar-status').textContent=!isSecureContext?'Abra o site em HTTPS no celular para usar AR.':'AR requer um celular e navegador compatíveis com WebXR. Neste aparelho, use a visualização 3D.';return;}
+ if(arStarting)return;
+ if(!isSecureContext){arMessage('Abra o link HTTPS publicado para usar a câmera em AR.');return;}
+ if(!navigator.xr){arMessage(/iPad|iPhone|iPod/.test(navigator.userAgent)?'O AR para iPhone ainda precisa da versão Apple Quick Look deste modelo. A visualização 3D está disponível.':'Abra o link no Chrome de um Android compatível com AR. Este navegador não oferece acesso à câmera em AR.');return;}
+ arStarting=true;arButton.disabled=true;arButton.textContent='Abrindo câmera…';
+ arStatus.textContent='Autorize a realidade aumentada quando o navegador solicitar.';
  let session;
  try{
  session=await navigator.xr.requestSession('immersive-ar',{requiredFeatures:['hit-test'],optionalFeatures:['dom-overlay'],domOverlay:{root:document.querySelector('#ar-overlay')}});
+ cancelAnimationFrame(animation);
  if(!ready)await initialize();
  const oldBackground=scene.background,oldPosition=table.position.clone(),oldRotation=table.rotation.clone();
  active=true;container.hidden=false;photo.hidden=true;renderer.xr.enabled=true;renderer.xr.setReferenceSpaceType('local');
@@ -73,6 +83,10 @@ arButton.addEventListener('click',async()=>{
  await renderer.xr.setSession(session);
  source=await session.requestHitTestSource({space:await session.requestReferenceSpace('viewer')});
  session.addEventListener('select',()=>{if(reticle.visible){table.position.setFromMatrixPosition(reticle.matrix);table.visible=true;document.querySelector('#ar-instruction').textContent='Mesa posicionada. Toque para reposicionar. Escala ilustrativa.';}});
- renderer.setAnimationLoop((time,frame)=>{if(frame){const hits=frame.getHitTestResults(source);reticle.visible=hits.length>0;if(hits.length)reticle.matrix.fromArray(hits[0].getPose(renderer.xr.getReferenceSpace()).transform.matrix);}renderer.render(scene,camera);});
- }catch(error){if(session)await session.end().catch(()=>{});document.querySelector('#ar-status').textContent='Não foi possível iniciar AR. Verifique as permissões e a compatibilidade do celular.';}
+ renderer.setAnimationLoop((time,frame)=>{if(frame){const hits=frame.getHitTestResults(source);const pose=hits[0]?.getPose(renderer.xr.getReferenceSpace());reticle.visible=!!pose;if(pose)reticle.matrix.fromArray(pose.transform.matrix);}renderer.render(scene,camera);});
+ }catch(error){
+ if(session)await session.end().catch(()=>{});
+ console.error('Falha ao iniciar AR:',error);
+ arMessage(error.name==='NotAllowedError'?'A permissão de AR foi recusada. Autorize o acesso nas configurações do navegador e tente novamente.':error.name==='NotSupportedError'?'Este aparelho não oferece AR com reconhecimento de superfície. Use um Android compatível com AR no Chrome.':'Não foi possível abrir a câmera em AR. Feche outras experiências de câmera e tente novamente.');
+ }finally{arStarting=false;arButton.disabled=false;arButton.textContent='Ver em casa · AR';}
 });

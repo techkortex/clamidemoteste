@@ -5,7 +5,7 @@
   <title>Clami — Design para viver</title>
   <meta name="description" content="Ver coleção de móveis Clami, descubra o design em 3D e encontre nossas lojas em São Paulo.">
   <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#ffffff">
-  <link rel="icon" href="./assets/favicon.png"><link rel="stylesheet" href="./style.css?v=19">
+  <link rel="icon" href="./assets/favicon.png"><link rel="stylesheet" href="./style.css?v=21">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/":"./vendor/addons/"}}</script>
   <script src="./catalog.js?v=2" defer></script><script src="./new-products.js?v=2" defer></script><script src="./app.js?v=15" defer></script>
 </head>
@@ -40,7 +40,7 @@
         <div class="viewer-bottom"><p id="viewer-hint">Fotografia oficial Clami</p><div class="view-controls" hidden><button id="rotate-left" aria-label="Girar mesa para a esquerda">↶</button><button id="reset-view" aria-label="Restaurar vista inicial">↺</button><button id="rotate-right" aria-label="Girar mesa para a direita">↷</button></div><button id="alternate-photo" class="text-button">Ver outro ângulo </button></div>
       </div>
     </div>
-    <div class="ar-entry"><div class="ar-intro"><span>REALIDADE AUMENTADA</span><h3>A Bansang, no seu espaço.</h3></div><button class="pill dark" id="view-ar">Ver em casa · AR</button><p id="ar-status" role="status">Disponível em celulares compatíveis. Representação ilustrativa.</p></div><div class="product-bottom"><div><h3>Mesa de jantar Bansang</h3><p>Design por Sung Sook Kim</p></div><div class="product-actions"><button class="pill outline" id="open-specs">Ver detalhes</button><a class="pill dark" href="#lojas" data-interest="Mesa de jantar Bansang">Converse com a Clami </a></div></div>
+    <div class="ar-entry"><div class="ar-intro"><span>REALIDADE AUMENTADA</span><h3>A Bansang, no seu espaço.</h3></div><button class="pill dark" id="view-ar">Ver em casa · AR</button><a id="view-ar-apple" class="pill dark" rel="ar" href="assets/bansang-ar.usdz" hidden><img alt="" aria-hidden="true" width="22" height="22" src="assets/ar-camera.svg">Ver em casa · AR</a><p id="ar-status" role="status">Disponível em celulares compatíveis. Representação ilustrativa.</p></div><div class="product-bottom"><div><h3>Mesa de jantar Bansang</h3><p>Design por Sung Sook Kim</p></div><div class="product-actions"><button class="pill outline" id="open-specs">Ver detalhes</button><a class="pill dark" href="#lojas" data-interest="Mesa de jantar Bansang">Converse com a Clami </a></div></div>
   </section>
   <section id="atelie" class="atelier section-pad"><div class="section-heading"><div><p class="eyebrow">Ateliê Clami</p><h2>Combine seu ambiente.</h2></div><p class="section-intro">Toque nas peças para mudar a composição.</p></div><div class="atelier-layout"><div class="moodboard"><div class="moodboard-top"><span>ATELIÊ / CLAMI</span><span>01 — ESTAR</span></div><div id="mood-pieces"></div><div class="moodboard-bottom"><span>Sua composição.</span><span>Clami</span></div></div><div class="atelier-options"><p class="eyebrow">Sua seleção</p><div id="atelier-choices"></div><p class="model-note">Composição ilustrativa, sem escala.</p><a id="atelier-explore" class="pill dark" href="./produto.html?produto=patou">Ver peça principal</a></div></div></section><section id="colecao" class="collection section-pad">
     <div class="section-heading"><div><h2>Coleção Clami.</h2></div></div>
@@ -56,5 +56,5 @@
 </main>
 <footer><div class="footer-top"><a class="brand" href="#inicio" aria-label="Clami, voltar ao início"><img src="./assets/logo.svg" alt="Clami" width="150" height="50"></a><p>Cabe na sua vida.</p><div><a href="https://www.instagram.com/clamioficial/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/ClamiOficial/" target="_blank" rel="noopener">Facebook</a><a href="https://clami.com.br/contato/" target="_blank" rel="noopener">Contato</a></div></div><div class="footer-bottom"><span>Clami © 2026</span><span class="kortex-credit">Criado pela <strong>Kortex</strong></span><span>Demonstração de conceito · Imagens e marca Clami</span><button class="text-button" id="open-sources">Fontes e informações</button></div></footer>
 <dialog id="detail-dialog" aria-labelledby="dialog-title"><button class="close-dialog" aria-label="Fechar detalhes">×</button><div id="dialog-content"></div></dialog>
-<script type="module" src="./viewer.js?v=17"></script>
+<script type="module" src="./viewer.js?v=21"></script>
 <div id="ar-overlay" hidden><p id="ar-instruction">Aponte para o chão e toque para posicionar. Escala ilustrativa.</p><button id="ar-exit">Sair do AR</button></div></body></html>
